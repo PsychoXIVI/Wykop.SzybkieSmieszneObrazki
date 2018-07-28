@@ -3,7 +3,7 @@
 // @namespace   Wykop
 // @description Dodatek dla Wykop.pl pozwalający na szybsze dodawanie obrazków.
 // @author      PsychoX (psychoxivi@gmail.com)
-// @version     1.2
+// @version     1.2.1
 // @include     *://*wykop.pl/*
 // @downloadURL https://raw.githubusercontent.com/PsychoXIVI/Wykop.SzybkieSmieszneObrazki/master/SzybkieSmieszneObrazki.user.js
 // @updateURL   https://raw.githubusercontent.com/PsychoXIVI/Wykop.SzybkieSmieszneObrazki/master/SzybkieSmieszneObrazki.user.js
@@ -12,7 +12,7 @@
 (function (){
 	// Configuration
 	//	Here you can configure the script.
-	config = {
+	var config = {
 		'pasteImageFile': 		true,
 		'pasteImageHTML': 		true,
 		'pasteImageLink': 		true,
@@ -23,7 +23,7 @@
 	}
 	
 	// Greasemonkey jQuery from current window
-    $ = $ || unsafeWindow && unsafeWindow.$;
+    var $ = $ || unsafeWindow && unsafeWindow.$;
 	if (!$) {
 		return;
 	}
