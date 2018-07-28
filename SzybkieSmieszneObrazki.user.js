@@ -3,7 +3,7 @@
 // @namespace   Wykop
 // @description Dodatek dla Wykop.pl pozwalający na szybsze dodawanie obrazków.
 // @author      PsychoX (psychoxivi@gmail.com)
-// @version     1.3
+// @version     1.4
 // @include     *://*wykop.pl/*
 // @downloadURL https://raw.githubusercontent.com/PsychoXIVI/Wykop.SzybkieSmieszneObrazki/master/SzybkieSmieszneObrazki.user.js
 // @updateURL   https://raw.githubusercontent.com/PsychoXIVI/Wykop.SzybkieSmieszneObrazki/master/SzybkieSmieszneObrazki.user.js
@@ -31,6 +31,7 @@
     $(document).ready(function () {
         /* Consts */
 		const imageURLRegex = /https?:\/\/[^\s]*\/[^\s]*(?:jpe?g|png|gif|bmp|svg)/gi;
+		const youtubeURLRegex = /https?:\/\/[^\s]*youtu(?:be.com|.be)\/[^\s]*/gi;
 
 		/* Functions */
 		// Searches all matches regex pattern in string
@@ -38,16 +39,18 @@
 			var result = [];
 
 			const matches = string.match(new RegExp(pattern.source, pattern.flags));
-
-			for (var i = 0; i < matches.length; i++) {
-				result.push(new RegExp(pattern.source, pattern.flags).exec(matches[i]));
+			
+			if (matches) {
+				for (var i = 0; i < matches.length; ++i) {
+					result.push(new RegExp(pattern.source, pattern.flags).exec(matches[i]));
+				}
 			}
-
+			
 			return result;
 		};
 
 		//
-		const updateImageByURL = function (context, url) {
+		const updateAttachmentByURL = function (context, url) {
 			// Set the URL of image
 			if (url) {
 				// Open (and hide) add media form
@@ -61,7 +64,7 @@
 			}
 			else {
 				// Remove any attachment
-				context.find('.removeAttachemnt').click();
+				context.find('.removeAttachment').click();
 			}
 		}
 
@@ -74,8 +77,6 @@
 
             // For each item...
             for (var item = items[0], i = 0; i < items.length; item = items[i++]) {
-                console.log(item);
-
                 switch (item.kind) {
 					case 'string':
 					{
@@ -88,7 +89,7 @@
 									var url = html.substring(0, html.indexOf('"'));
 
 									// Update
-									updateImageByURL(context, url);
+									updateAttachmentByURL(context, url);
 								}
 							});
 						} else
@@ -103,11 +104,17 @@
 							}
 
 							item.getAsString(function (text) {
-								// Find first image URL in pasted text
-								var url = searchString(text, imageURLRegex)[0];
+								// Find first image or YouTube URL in pasted text
+								var firstImageMatch = imageURLRegex.exec(text);
+								var firstYouTubeMatch = youtubeURLRegex.exec(text);
+								var url = (
+									!firstYouTubeMatch ||
+									firstImageMatch && 
+									firstImageMatch.index < firstYouTubeMatch.index
+								) ? firstImageMatch : firstYouTubeMatch;
 
 								// Update
-								updateImageByURL(context, url);
+								updateAttachmentByURL(context, url);
 							});
 						}
 
