@@ -3,7 +3,7 @@
 // @namespace   Wykop
 // @description Dodatek dla Wykop.pl pozwalający na szybsze dodawanie obrazków.
 // @author      PsychoX (psychoxivi@gmail.com)
-// @version     1.4
+// @version     1.5
 // @include     *://*wykop.pl/*
 // @downloadURL https://raw.githubusercontent.com/PsychoXIVI/Wykop.SzybkieSmieszneObrazki/master/SzybkieSmieszneObrazki.user.js
 // @updateURL   https://raw.githubusercontent.com/PsychoXIVI/Wykop.SzybkieSmieszneObrazki/master/SzybkieSmieszneObrazki.user.js
@@ -54,7 +54,7 @@
 			// Set the URL of image
 			if (url) {
 				// Open (and hide) add media form
-				context.find('.openAddMediaOverlay').click();
+				context.find('.openAddMediaOverlay')[0].click(); // Retarded, just as wykop.pl
 				context.find('.addMediaOverlay').css('display', 'none');
 				context.find('.overlay').css('display', 'none');
 
@@ -107,14 +107,28 @@
 								// Find first image or YouTube URL in pasted text
 								var firstImageMatch = imageURLRegex.exec(text);
 								var firstYouTubeMatch = youtubeURLRegex.exec(text);
-								var url = (
-									!firstYouTubeMatch ||
-									firstImageMatch && 
-									firstImageMatch.index < firstYouTubeMatch.index
-								) ? firstImageMatch : firstYouTubeMatch;
+                                var url = '';
+                                if (firstImageMatch) {
+                                    if (firstYouTubeMatch) {
+                                        url = firstImageMatch.index < firstYouTubeMatch.index ? firstImageMatch[0] : firstYouTubeMatch[0];
+                                    }
+                                    else {
+                                        url = firstImageMatch[0];
+                                    }
+                                }
+                                else {
+                                    if (firstYouTubeMatch) {
+                                        url = firstYouTubeMatch[0];
+                                    }
+                                    else {
+                                        url = ''; // Not found
+                                    }
+                                }
 
 								// Update
-								updateAttachmentByURL(context, url);
+                                if (url) {  
+                                    updateAttachmentByURL(context, url);
+                                }
 							});
 						}
 
