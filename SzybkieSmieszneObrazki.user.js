@@ -3,7 +3,7 @@
 // @namespace   Wykop
 // @description Dodatek dla Wykop.pl pozwalający na szybsze dodawanie obrazków.
 // @author      PsychoX (psychoxivi@gmail.com)
-// @version     1.5
+// @version     1.5.1
 // @include     *://*wykop.pl/*
 // @downloadURL https://raw.githubusercontent.com/PsychoXIVI/Wykop.SzybkieSmieszneObrazki/master/SzybkieSmieszneObrazki.user.js
 // @updateURL   https://raw.githubusercontent.com/PsychoXIVI/Wykop.SzybkieSmieszneObrazki/master/SzybkieSmieszneObrazki.user.js
@@ -142,7 +142,7 @@
 							var file = item.getAsFile();
 
 							// Open (and hide) add media form
-							context.find('.openAddMediaOverlay').click();
+							context.find('.openAddMediaOverlay')[0].click(); // Retarded, just as wykop.pl
 							context.find('.addMediaOverlay').css('display', 'none');
 							context.find('.overlay').css('display', 'none');
 
